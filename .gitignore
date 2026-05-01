@@ -1,0 +1,48 @@
+# Data files (large CSV not tracked)
+data/*.csv
+data/*.xlsx
+data/*.parquet
+
+# Model artifacts (large binary files)
+models/*.pkl
+models/*.joblib
+models/*.bin
+models/*.h5
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Streamlit
+.streamlit/secrets.toml
