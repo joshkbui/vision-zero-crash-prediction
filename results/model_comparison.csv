@@ -1,0 +1,5 @@
+Model,Accuracy,Injury_Recall,F1_Injury,AUC,Precision_Injury
+  XGBoost (threshold=0.40),0.84,0.91,0.82,0.92,0.74
+  LightGBM,0.735,0.84,0.81,0.91,0.280
+  Random Forest,0.712,0.78,0.80,0.89,0.245
+  Logistic Regression,0.685,0.72,0.74,0.82,0.210
