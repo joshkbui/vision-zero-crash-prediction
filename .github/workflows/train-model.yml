@@ -1,0 +1,43 @@
+name: Train model
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/train_model.py"
+      - ".github/workflows/train-model.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Download Montgomery County crash data
+        run: |
+          mkdir -p data
+          curl -sSfL --retry 3 -o data/Crash_Reporting_-_Drivers_Data.csv "https://data.montgomerycountymd.gov/api/views/mmzv-x632/rows.csv?accessType=DOWNLOAD"
+          wc -l data/Crash_Reporting_-_Drivers_Data.csv
+
+      - name: Train model
+        run: python scripts/train_model.py data/Crash_Reporting_-_Drivers_Data.csv
+
+      - name: Commit model files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f models/xgb_model.pkl models/encoders.pkl models/metrics.json
+          git commit -m "Retrain XGBoost model and encoders" || echo "No changes"
+          git push
