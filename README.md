@@ -2,7 +2,7 @@
 ### Crash Injury Prediction for Montgomery County, MD
 **DATA 4382-002 — Capstone 2 | Josh Bui & Danson Vo**
 
-**Live app:** [vision-zero-crash-prediction.streamlit.app](https://vision-zero-crash-prediction-o5k25coaqg2mvbdfbhh73z.streamlit.app/)
+**Live app:** [vision-zero-simulator.streamlit.app](https://vision-zero-simulator.streamlit.app/)
 
 ---
 
