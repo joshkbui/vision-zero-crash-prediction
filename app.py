@@ -17,19 +17,19 @@ warnings.filterwarnings("ignore")
 
 # ─── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-      page_title="Vision Zero Injury Risk Simulator",
-      page_icon="🚦",
-      layout="wide",
-      initial_sidebar_state="expanded",
+    page_title="Vision Zero Injury Risk Simulator",
+    page_icon="🚦",
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
 # ─── Load Model ────────────────────────────────────────────────────────────────
 @st.cache_resource
 def load_model():
-      try:
-                model = joblib.load("models/xgb_model.pkl")
-                return model
-except FileNotFoundError:
+    try:
+        model = joblib.load("models/xgb_model.pkl")
+        return model
+    except FileNotFoundError:
         st.error("Model file not found. Please train the model first (run notebooks/Final_Deployment_Code.ipynb).")
         return None
 
@@ -37,17 +37,17 @@ model = load_model()
 
 # ─── Feature Lists ─────────────────────────────────────────────────────────────
 CATEGORICAL_FEATURES = [
-      "Weather", "Surface Condition", "Light", "Traffic Control",
-      "Collision Type", "Circumstance", "Vehicle Movement",
-      "Driver Substance Abuse", "Driver At Fault", "Vehicle Damage Extent",
-      "Vehicle Body Type", "Route Type", "Vehicle Going Dir",
-      "Driverless Vehicle", "Parked Vehicle", "Vehicle First Impact Location",
-      "Driver Distracted By", "Non-Motorist Substance Abuse"
+    "Weather", "Surface Condition", "Light", "Traffic Control",
+    "Collision Type", "Circumstance", "Vehicle Movement",
+    "Driver Substance Abuse", "Driver At Fault", "Vehicle Damage Extent",
+    "Vehicle Body Type", "Route Type", "Vehicle Going Dir",
+    "Driverless Vehicle", "Parked Vehicle", "Vehicle First Impact Location",
+    "Driver Distracted By", "Non-Motorist Substance Abuse"
 ]
 
 NUMERIC_FEATURES = [
-      "Speed Limit", "Latitude", "Longitude",
-      "Hour", "DayOfWeek", "Vehicle Age"
+    "Speed Limit", "Latitude", "Longitude",
+    "Hour", "DayOfWeek", "Vehicle Age"
 ]
 
 BINARY_FEATURES = ["IsNight", "IsWeekend"]
@@ -59,8 +59,8 @@ THRESHOLD = 0.40
 # ─── UI ────────────────────────────────────────────────────────────────────────
 st.title("🚦 Vision Zero Injury Risk Simulator")
 st.markdown(
-      "**Predict crash injury probability** using Montgomery County, MD crash data. "
-      "Built with XGBoost (91% injury recall) + SHAP explanations."
+    "**Predict crash injury probability** using Montgomery County, MD crash data. "
+    "Built with XGBoost (91% injury recall) + SHAP explanations."
 )
 st.markdown("---")
 
@@ -68,12 +68,12 @@ st.markdown("---")
 st.sidebar.header("Crash Scenario Inputs")
 
 with st.sidebar:
-      st.subheader("Environment")
-      weather = st.selectbox("Weather", ["CLEAR", "CLOUDY", "RAINING", "SNOWING", "FOG", "UNKNOWN"])
-      light = st.selectbox("Light Condition", ["DAYLIGHT", "DARK - LIGHTED", "DARK - NOT LIGHTED", "DAWN", "DUSK"])
-      surface = st.selectbox("Surface Condition", ["DRY", "WET", "ICE", "SNOW", "SAND/MUD/DIRT", "UNKNOWN"])
-      traffic_control = st.selectbox("Traffic Control", ["NO CONTROLS", "TRAFFIC SIGNAL", "STOP SIGN", "YIELD SIGN", "UNKNOWN"])
-      route_type = st.selectbox("Route Type", ["MARYLAND (STATE)", "COUNTY", "MUNICIPAL", "INTERSTATE", "US"])
+    st.subheader("Environment")
+    weather = st.selectbox("Weather", ["CLEAR", "CLOUDY", "RAINING", "SNOWING", "FOG", "UNKNOWN"])
+    light = st.selectbox("Light Condition", ["DAYLIGHT", "DARK - LIGHTED", "DARK - NOT LIGHTED", "DAWN", "DUSK"])
+    surface = st.selectbox("Surface Condition", ["DRY", "WET", "ICE", "SNOW", "SAND/MUD/DIRT", "UNKNOWN"])
+    traffic_control = st.selectbox("Traffic Control", ["NO CONTROLS", "TRAFFIC SIGNAL", "STOP SIGN", "YIELD SIGN", "UNKNOWN"])
+    route_type = st.selectbox("Route Type", ["MARYLAND (STATE)", "COUNTY", "MUNICIPAL", "INTERSTATE", "US"])
 
     st.subheader("Vehicle")
     vehicle_body = st.selectbox("Vehicle Body Type", ["PASSENGER CAR", "PICKUP TRUCK", "SUV", "VAN", "MOTORCYCLE", "BUS", "TRUCK", "OTHER"])
@@ -104,7 +104,7 @@ with st.sidebar:
 
 # ─── Feature Engineering ───────────────────────────────────────────────────────
 day_map = {"Monday": 0, "Tuesday": 1, "Wednesday": 2, "Thursday": 3,
-                      "Friday": 4, "Saturday": 5, "Sunday": 6}
+           "Friday": 4, "Saturday": 5, "Sunday": 6}
 
 is_night = 1 if (hour < 6 or hour >= 20) else 0
 is_weekend = 1 if day_of_week in ["Saturday", "Sunday"] else 0
@@ -120,35 +120,35 @@ parked_binary = 1 if parked == "Yes" else 0
 
 # ─── Build Input DataFrame ─────────────────────────────────────────────────────
 input_data = {
-      "Weather": weather,
-      "Surface Condition": surface,
-      "Light": light,
-      "Traffic Control": traffic_control,
-      "Collision Type": collision_type,
-      "Circumstance": circumstance,
-      "Vehicle Movement": vehicle_movement,
-      "Driver Substance Abuse": substance,
-      "Driver At Fault": at_fault,
-      "Vehicle Damage Extent": vehicle_damage,
-      "Vehicle Body Type": vehicle_body,
-      "Route Type": route_type,
-      "Vehicle Going Dir": vehicle_dir,
-      "Driverless Vehicle": driverless,
-      "Parked Vehicle": parked,
-      "Vehicle First Impact Location": vehicle_impact,
-      "Driver Distracted By": distracted,
-      "Non-Motorist Substance Abuse": non_motorist_substance,
-      "Speed Limit": speed_limit,
-      "Latitude": latitude,
-      "Longitude": longitude,
-      "Hour": hour,
-      "DayOfWeek": day_map[day_of_week],
-      "Vehicle Age": vehicle_age,
-      "IsNight": is_night,
-      "IsWeekend": is_weekend,
-      "Speed_x_Night": speed_x_night,
-      "Substance_x_Night": substance_x_night,
-      "VehicleAge_x_Collision": vehicle_age_x_collision,
+    "Weather": weather,
+    "Surface Condition": surface,
+    "Light": light,
+    "Traffic Control": traffic_control,
+    "Collision Type": collision_type,
+    "Circumstance": circumstance,
+    "Vehicle Movement": vehicle_movement,
+    "Driver Substance Abuse": substance,
+    "Driver At Fault": at_fault,
+    "Vehicle Damage Extent": vehicle_damage,
+    "Vehicle Body Type": vehicle_body,
+    "Route Type": route_type,
+    "Vehicle Going Dir": vehicle_dir,
+    "Driverless Vehicle": driverless,
+    "Parked Vehicle": parked,
+    "Vehicle First Impact Location": vehicle_impact,
+    "Driver Distracted By": distracted,
+    "Non-Motorist Substance Abuse": non_motorist_substance,
+    "Speed Limit": speed_limit,
+    "Latitude": latitude,
+    "Longitude": longitude,
+    "Hour": hour,
+    "DayOfWeek": day_map[day_of_week],
+    "Vehicle Age": vehicle_age,
+    "IsNight": is_night,
+    "IsWeekend": is_weekend,
+    "Speed_x_Night": speed_x_night,
+    "Substance_x_Night": substance_x_night,
+    "VehicleAge_x_Collision": vehicle_age_x_collision,
 }
 
 input_df = pd.DataFrame([input_data])
@@ -157,30 +157,30 @@ input_df = pd.DataFrame([input_data])
 col1, col2 = st.columns([1, 1])
 
 with col1:
-      st.subheader("Crash Scenario Summary")
-      st.dataframe(input_df.T.rename(columns={0: "Value"}), height=400)
+    st.subheader("Crash Scenario Summary")
+    st.dataframe(input_df.T.rename(columns={0: "Value"}), height=400)
 
 with col2:
-      st.subheader("Injury Risk Prediction")
+    st.subheader("Injury Risk Prediction")
 
     if model is not None and st.button("Predict Injury Risk", type="primary", use_container_width=True):
-              try:
-                            prob = model.predict_proba(input_df)[0][1]
-                            prediction = 1 if prob >= THRESHOLD else 0
+        try:
+            prob = model.predict_proba(input_df)[0][1]
+            prediction = 1 if prob >= THRESHOLD else 0
 
-                  # Risk gauge
-                            if prob >= 0.75:
-                                              risk_level = "HIGH RISK"
-                                              color = "red"
-elif prob >= 0.50:
+            # Risk gauge
+            if prob >= 0.75:
+                risk_level = "HIGH RISK"
+                color = "red"
+            elif prob >= 0.50:
                 risk_level = "MODERATE RISK"
                 color = "orange"
-elif prob >= 0.30:
+            elif prob >= 0.30:
                 risk_level = "LOW-MODERATE RISK"
                 color = "yellow"
-else:
+            else:
                 risk_level = "LOW RISK"
-                  color = "green"
+                color = "green"
 
             st.markdown(f"### Injury Probability: `{prob:.1%}`")
             st.markdown(f"### Prediction: {'**INJURY LIKELY**' if prediction == 1 else '**No Injury Expected**'}")
@@ -198,29 +198,29 @@ else:
 
             fig, ax = plt.subplots(figsize=(10, 6))
             shap.waterfall_plot(
-                              shap.Explanation(
-                                                    values=shap_values[0],
-                                                    base_values=explainer.expected_value,
-                                                    data=input_df.iloc[0],
-                                                    feature_names=input_df.columns.tolist()
-                              ),
-                              show=False,
-                              max_display=15
+                shap.Explanation(
+                    values=shap_values[0],
+                    base_values=explainer.expected_value,
+                    data=input_df.iloc[0],
+                    feature_names=input_df.columns.tolist()
+                ),
+                show=False,
+                max_display=15
             )
             st.pyplot(fig)
             plt.close()
 
-except Exception as e:
+        except Exception as e:
             st.error(f"Prediction error: {e}")
             st.info("Note: The model requires training data encoders. Run notebooks/Final_Deployment_Code.ipynb to generate the full model artifact.")
-elif model is None:
+    elif model is None:
         st.info("Load the trained model to enable predictions.")
-else:
+    else:
         st.info("Configure the crash scenario in the sidebar, then click 'Predict Injury Risk'.")
 
 # ─── Footer ────────────────────────────────────────────────────────────────────
 st.markdown("---")
 st.markdown(
-      "*Vision Zero Injury Risk Simulator — DATA 4382-002 Capstone 2 | "
-      "Josh Bui & Danson Vo | University of Texas at Arlington*"
+    "*Vision Zero Injury Risk Simulator — DATA 4382-002 Capstone 2 | "
+    "Josh Bui & Danson Vo | University of Texas at Arlington*"
 )
