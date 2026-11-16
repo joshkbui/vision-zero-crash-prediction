@@ -8,6 +8,9 @@ models/*.pkl
 models/*.joblib
 models/*.bin
 models/*.h5
+# Deployed model files are tracked so Streamlit Cloud can load them
+!models/xgb_model.pkl
+!models/encoders.pkl
 
 # Python
 __pycache__/
